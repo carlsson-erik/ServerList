@@ -1,5 +1,6 @@
 package listserver;
 
+import serverList.ServerData;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -106,7 +107,9 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
         this.setSize(650, 600);
         this.setResizable(false);
         this.setLayout(new FlowLayout(1));
-
+        
+        this.setTitle("List Server");
+        
         sendButton = new JButton("Send");
         sendButton.setPreferredSize(new Dimension(100, 100));
         sendButton.setVisible(true);
@@ -129,7 +132,7 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
         text.setPreferredSize(new Dimension(200, 50));
         text.setVisible(true);
 
-        portText = new JTextField("33768");
+        portText = new JTextField("33678");
         portText.setPreferredSize(new Dimension(200, 50));
         portText.setVisible(true);
 

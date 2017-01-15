@@ -1,5 +1,6 @@
 package listserver;
 
+import serverList.ServerData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import serverList.UserPackage;
 
 /**
  *
@@ -51,14 +53,14 @@ public class ListUser implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if(socket != null){
-            if (socket.isBound()) {
+            if (socket != null) {
+                if (socket.isBound()) {
 
-                ip = socket.getInetAddress().getHostAddress();
-                break;
+                    ip = socket.getInetAddress().getHostAddress();
+                    break;
+                }
             }
-            }
-            
+
         }
         System.out.println("setting up streams");
         setupStreams();
@@ -89,23 +91,24 @@ public class ListUser implements Runnable {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            if (currentPackage.getPort() != 0) {
-                port = currentPackage.getPort();
+            if (currentPackage != null) {
+                if (currentPackage.getPort() != 0) {
+                    System.out.println("asd");
+                    port = currentPackage.getPort();
+                }
+                if (currentPackage.getPlayers() != 0) {
+                    players = currentPackage.getPlayers();
+                }
+                if (currentPackage.getName() != null) {
+                    name = currentPackage.getName();
+                }
+                if (currentPackage.getKey() != null) {
+                    key = currentPackage.getKey();
+                }
+                if (currentPackage.isRequestingList()) {
+                    requestingList = true;
+                }
             }
-            if (currentPackage.getPlayers() != 0) {
-                players = currentPackage.getPlayers();
-            }
-            if (currentPackage.getName() != null) {
-                name = currentPackage.getName();
-            }
-            if (currentPackage.getKey() != null) {
-                key = currentPackage.getKey();
-            }
-            if (currentPackage.isRequestingList()) {
-                requestingList = true;
-            }
-
         } while (true);
     }
 
