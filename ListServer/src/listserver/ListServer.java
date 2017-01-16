@@ -51,6 +51,8 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
     private int connectedCount;
     private int playerCount;
     private int serverCount;
+    private long lastTick;
+    private final int TPS = 5;
 
     private Thread t;
 
@@ -77,7 +79,7 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
         connectedCount = 0;
         serverCount = 0;
         playerCount = 0;
-
+        lastTick = System.currentTimeMillis();
         waitForKeyTime = 5000;
         requestListDelay = 5000;
 
@@ -90,11 +92,8 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
             keyText.setEnabled(false);
             startStopButton.setText("Stop");
         }
+
         
-        
-        for(int i = 0; i < 100;i++){
-            gameServers.add(new ListUser("192.180.1." + i,353 + i, "name" + i, 12+i));
-        }
 
         t.start();
 
@@ -107,9 +106,9 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
         this.setSize(650, 600);
         this.setResizable(false);
         this.setLayout(new FlowLayout(1));
-        
+
         this.setTitle("List Server");
-        
+
         sendButton = new JButton("Send");
         sendButton.setPreferredSize(new Dimension(100, 100));
         sendButton.setVisible(true);
@@ -176,78 +175,93 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
     @Override
     public void run() {
         while (true) {
+            if (System.currentTimeMillis() > lastTick + 1000/TPS) {
+                
+                if (mainSocket != null) {
 
-            if (mainSocket != null) {
+                    //add new servers to the server list
+                    ArrayList<Socket> newSockets = mainSocket.getWaitingSockets();
 
-                //add new servers to the server list
-                ArrayList<Socket> newSockets = mainSocket.getWaitingSockets();
+                    for (int i = 0; i < newSockets.size(); i++) {
+                        users.add(new ListUser(newSockets.get(i)));
+                        showMessage("Added new user");
+                        mainSocket.remove(users.get(users.size() - 1).getSocket());
+                        connectedCount++;
+                    }
 
-                for (int i = 0; i < newSockets.size(); i++) {
-                    users.add(new ListUser(newSockets.get(i)));
-                    showMessage("Added new user");
-                    mainSocket.remove(users.get(users.size() - 1).getSocket());
-                    connectedCount++;
-                }
-
-                //Adds users to removeUsers who didn't send Key in time
-                for (ListUser lU : users) {
-
-                    if (lU.getKey() == keyText.getText() || keyText.getText().isEmpty()) {
-
-                        if (lU.getPort() != 0 && lU.getName() != null) {
-                            gameServers.add(lU);
-                            removeUsers.add(lU);
-                            serverCount++;
-                        } else {
-                            players.add(lU);
-                            removeUsers.add(lU);
-                            playerCount++;
+                    for (ListUser s : gameServers) {
+                        if (!s.isBound()) {
+                            gameServers.remove(s);
+                            break;
                         }
+                    }
+                    for (ListUser p : players) {
+                        if (!p.isBound()) {
+                            players.remove(p);
+                            break;
+                        }
+                    }
 
-                    } else if (lU.getTimeWhenConnected() + waitForKeyTime < System.currentTimeMillis()) {
-                        showMessage("Removed User: " + lU.getIp() + "  | No key | " + "Key Delay = " + waitForKeyTime / 1000 + "sec");
-                        removeUsers.add(lU);
+                    //Adds users to removeUsers who didn't send Key in time
+                    for (ListUser lU : users) {
+
+                        if (lU.getKey() == keyText.getText() || keyText.getText().isEmpty()) {
+
+                            if (lU.getPort() != 0 && lU.getName() != null) {
+                                gameServers.add(lU);
+                                removeUsers.add(lU);
+                                serverCount++;
+                            } else {
+                                players.add(lU);
+                                removeUsers.add(lU);
+                                playerCount++;
+                            }
+
+                        } else if (lU.getTimeWhenConnected() + waitForKeyTime < System.currentTimeMillis()) {
+                            showMessage("Removed User: " + lU.getIp() + "  | No key | " + "Key Delay = " + waitForKeyTime / 1000 + "sec");
+                            removeUsers.add(lU);
+
+                        }
 
                     }
 
-                }
-
-                //Removes users from users arrayList
-                for (ListUser r : removeUsers) {
-                    ListUser temp = r;
-                    removedCount++;
-                    users.remove(temp);
-                    removeUsers.remove(temp);
-                    break;
-                }
-
-                for (ListUser p : players) {
-                    if (p.getName() != null && p.getPort() != 0) {
-                        ListUser temp = p;
-                        gameServers.add(temp);
-                        players.remove(temp);
+                    //Removes users from users arrayList
+                    for (ListUser r : removeUsers) {
+                        ListUser temp = r;
+                        removedCount++;
+                        users.remove(temp);
+                        removeUsers.remove(temp);
                         break;
                     }
 
-                    if (p.isRequestingList()) {
-                        
-                        if (System.currentTimeMillis() > requestListDelay + p.getLastListRequest()) {
-                            
-                            for (ListUser s : gameServers) {
-                                System.out.println("new");
-                                p.output(new ServerData(s.getIp(), s.getPort(), s.getName(), s.getPlayers()));
-
-                            }
-                            
-                        p.setLastListRequest(System.currentTimeMillis());
-                        p.setRequestingList(false);
+                    for (ListUser p : players) {
+                        if (p.getName() != null && p.getPort() != 0) {
+                            ListUser temp = p;
+                            gameServers.add(temp);
+                            players.remove(temp);
+                            break;
                         }
-                        
-                        
+
+                        if (p.isRequestingList()) {
+
+                            if (System.currentTimeMillis() > requestListDelay + p.getLastListRequest()) {
+
+                                for (ListUser s : gameServers) {
+
+                                    p.output(new ServerData(s.getIp(), s.getPort(), s.getName(), s.getPlayers()));
+
+                                }
+
+                                p.setLastListRequest(System.currentTimeMillis());
+                                p.setRequestingList(false);
+                            }
+
+                        }
+
                     }
 
                 }
-
+                lastTick = System.currentTimeMillis();
             }
         }
     }

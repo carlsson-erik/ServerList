@@ -26,7 +26,7 @@ public class ListUser implements Runnable {
     private int port;
     private int players;
     private String key;
-    private boolean requestingList;
+    private boolean requestingList,bound;
 
     private UserPackage currentPackage;
 
@@ -36,6 +36,7 @@ public class ListUser implements Runnable {
         timeWhenConnected = System.currentTimeMillis();
 
         requestingList = false;
+        bound = true;
 
         this.socket = socket;
 
@@ -56,7 +57,8 @@ public class ListUser implements Runnable {
             if (socket != null) {
                 if (socket.isBound()) {
 
-                    ip = socket.getInetAddress().getHostAddress();
+                    ip= "155.4.235.146";
+                    //ip = socket.getInetAddress().getHostAddress();
                     break;
                 }
             }
@@ -80,6 +82,7 @@ public class ListUser implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        bound = true;
     }
 
     public void whileConnected() {
@@ -93,7 +96,7 @@ public class ListUser implements Runnable {
             }
             if (currentPackage != null) {
                 if (currentPackage.getPort() != 0) {
-                    System.out.println("asd");
+                    
                     port = currentPackage.getPort();
                 }
                 if (currentPackage.getPlayers() != 0) {
@@ -113,12 +116,14 @@ public class ListUser implements Runnable {
     }
 
     synchronized public void closeStreams() {
+        bound = false;
         try {
             output.close();
             input.close();
         } catch (IOException ex) {
             Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
 
     }
 
@@ -172,12 +177,7 @@ public class ListUser implements Runnable {
         return key;
     }
 
-    /**
-     * @return the socket
-     */
-    public Socket getSocket() {
-        return socket;
-    }
+    
 
     /**
      * @return the requestList
@@ -205,6 +205,20 @@ public class ListUser implements Runnable {
      */
     public void setRequestingList(boolean requestingList) {
         this.requestingList = requestingList;
+    }
+
+    /**
+     * @return the bound
+     */
+    public boolean isBound() {
+        return bound;
+    }
+
+    /**
+     * @return the socket
+     */
+    public Socket getSocket() {
+        return socket;
     }
 
 }
