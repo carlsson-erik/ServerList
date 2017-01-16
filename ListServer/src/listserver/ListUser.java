@@ -32,10 +32,12 @@ public class ListUser implements Runnable {
 
     public ListUser(Socket socket) {
 
-        t = new Thread(this, "Server");
+        t = new Thread(this, "ListUser");
+        //sets the time when the user connected
         timeWhenConnected = System.currentTimeMillis();
-
+        //The user doesn't request a list
         requestingList = false;
+        //the listUser is bound with the ListServer
         bound = true;
 
         this.socket = socket;
@@ -54,24 +56,20 @@ public class ListUser implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if (socket != null) {
-                if (socket.isBound()) {
-
-                    ip= "155.4.235.146";
-                    //ip = socket.getInetAddress().getHostAddress();
-                    break;
-                }
-            }
-
-        }
-        System.out.println("setting up streams");
+            
+        
+        
+        
+            //Sets up the streams
         setupStreams();
-        System.out.println("Connected");
+        //Do this while connected
         whileConnected();
-        System.out.println("Cloing streams");
+        //safely close the streams
         closeStreams();
-        System.out.println("Streams closed");
-
+        
+        
+        
+    }
     }
 
     public void setupStreams() {
@@ -82,17 +80,20 @@ public class ListUser implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         bound = true;
     }
 
     public void whileConnected() {
         do {
             try {
+                
+                //Waits for a userPackage
                 currentPackage = (UserPackage) input.readObject();
             } catch (IOException ex) {
                 closeStreams();
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
+                closeStreams();
             }
             if (currentPackage != null) {
                 if (currentPackage.getPort() != 0) {

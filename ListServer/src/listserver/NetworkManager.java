@@ -26,10 +26,11 @@ public class NetworkManager implements Runnable{
         running = true;
         waitingSockets = new ArrayList();
         
+        //Start a new ServerSocket
         try {
             socket = new ServerSocket(port,backlog);
         } catch (IOException ex) {
-            Logger.getLogger(NetworkManager.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("NetworkManager could not setup ServerSocket");
         }
         
         
@@ -41,16 +42,16 @@ public class NetworkManager implements Runnable{
     
     @Override
     public void run() {
-        
+        //ServerSocket waits for a user to connect to it and adds it to waitingSockets arraylist, then loops.
         while(running){
             try {
                 
                 waitingSockets.add(socket.accept());
-                System.out.println("New Connection in MainSocket");
+                
                 
                 
             } catch (IOException ex) {
-            
+                System.out.println("NetworkManager, ServerSocket failed at accepting new connection");
             }
             
         }
@@ -58,14 +59,14 @@ public class NetworkManager implements Runnable{
     }
     
     synchronized public void stop(){
-        System.out.println("Closing MainSocket");
+        
         try {
             socket.close();
             waitingSockets.clear();
             running = false;
             
         } catch (IOException ex) {
-            System.out.println("MainSocket failed at closing");
+            System.out.println("NetworkManager, failed at closing ServerSocket");
         }
     }
 
