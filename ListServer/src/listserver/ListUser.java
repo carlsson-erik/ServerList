@@ -63,7 +63,7 @@ public class ListUser implements Runnable {
         setupStreams();
         //get the ip
         ip = socket.getInetAddress().getHostAddress();
-        
+        //ip = "155.4.235.146";
         //Do this while connected
         whileConnected();
         //safely close the streams
@@ -81,11 +81,11 @@ public class ListUser implements Runnable {
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
             input = new ObjectInputStream(socket.getInputStream());
+        bound = true;
         } catch (IOException ex) {
-            Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
+            closeStreams();
         }
         
-        bound = true;
     }
 
     public void whileConnected() {
@@ -95,9 +95,11 @@ public class ListUser implements Runnable {
                 //Waits for a userPackage
                 currentPackage = (UserPackage) input.readObject();
             } catch (IOException ex) {
-                System.out.println("ListUser, failed at rescieving package");
+                closeStreams();
+                break;
             } catch (ClassNotFoundException ex) {
-                System.out.println("ListUser, failed at rescieving package");
+                closeStreams();
+                break;
             }
             if (currentPackage != null) {
                 
@@ -124,6 +126,7 @@ public class ListUser implements Runnable {
     }
 
     synchronized public void closeStreams() {
+        bound = false;
         try {
             output.close();
             input.close();
