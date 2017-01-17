@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Erik/Dropbox/Pro2/Socket/ListServer/src/serverList/ServerData.java</file>
-            <file>file:/C:/Users/Erik/Dropbox/Pro2/Socket/ListServer/src/listserver/ListUser.java</file>
-            <file>file:/C:/Users/Erik/Dropbox/Pro2/Socket/ListServer/src/serverList/UserPackage.java</file>
-            <file>file:/C:/Users/Erik/Dropbox/Pro2/Socket/ListServer/src/listserver/ListServer.java</file>
+            <file>file:/C:/Users/Erik/Documents/NetBeansProjects/Socket/Primary%20shit/ServerList/ListServer/src/listserver/ListServer.java</file>
+            <file>file:/C:/Users/Erik/Documents/NetBeansProjects/Socket/Primary%20shit/ServerList/ListServer/src/listserver/NetworkManager.java</file>
+            <file>file:/C:/Users/Erik/Documents/NetBeansProjects/Socket/Primary%20shit/ServerList/ListServer/src/listserver/ListUser.java</file>
+            <file>file:/C:/Users/Erik/Documents/NetBeansProjects/Socket/Primary%20shit/ServerList/ListServer/src/serverList/UserPackage.java</file>
+            <file>file:/C:/Users/Erik/Documents/NetBeansProjects/Socket/Primary%20shit/ServerList/ListServer/src/serverList/ServerData.java</file>
         </group>
     </open-files>
 </project-private>
