@@ -55,7 +55,6 @@ public class ListUser implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
             
         
         
@@ -68,11 +67,13 @@ public class ListUser implements Runnable {
         //Do this while connected
         whileConnected();
         //safely close the streams
+        bound = false;
         closeStreams();
         
         
+        t.stop();
         
-    }
+    
     }
 
     public void setupStreams() {
@@ -120,7 +121,6 @@ public class ListUser implements Runnable {
     }
 
     synchronized public void closeStreams() {
-        bound = false;
         try {
             output.close();
             input.close();
@@ -135,7 +135,7 @@ public class ListUser implements Runnable {
         try {
             output.writeObject(data);
         } catch (IOException ex) {
-            Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
+            closeStreams();
         }
     }
 

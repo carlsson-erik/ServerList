@@ -6,16 +6,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -374,7 +368,6 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
     }
 
     //removes a player with that ip from the players arraylist
-
     public void removePlayer(String ip) {
         System.out.println("removing player: " + ip);
         for (int i = 0; i < players.size() - 1; i++) {
