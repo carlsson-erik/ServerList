@@ -95,22 +95,25 @@ public class ListUser implements Runnable {
                 //Waits for a userPackage
                 currentPackage = (UserPackage) input.readObject();
             } catch (IOException ex) {
-                closeStreams();
+                System.out.println("ListUser, failed at rescieving package");
             } catch (ClassNotFoundException ex) {
-                closeStreams();
+                System.out.println("ListUser, failed at rescieving package");
             }
             if (currentPackage != null) {
+                
                 if (currentPackage.getPort() != 0) {
                     
                     port = currentPackage.getPort();
                 }
                 if (currentPackage.getPlayers() != 0) {
                     players = currentPackage.getPlayers();
+                    
                 }
                 if (currentPackage.getName() != null) {
                     name = currentPackage.getName();
                 }
                 if (currentPackage.getKey() != null) {
+                    
                     key = currentPackage.getKey();
                 }
                 if (currentPackage.isRequestingList()) {
