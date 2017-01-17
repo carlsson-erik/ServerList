@@ -62,6 +62,9 @@ public class ListUser implements Runnable {
         
             //Sets up the streams
         setupStreams();
+        //get the ip
+        ip = socket.getInetAddress().getHostAddress();
+        
         //Do this while connected
         whileConnected();
         //safely close the streams
