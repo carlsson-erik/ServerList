@@ -43,7 +43,7 @@ public class NetworkManager implements Runnable{
         //ServerSocket waits for a user to connect to it and adds it to waitingSockets arraylist, then loops.
         while(running){
             try {
-                
+                //adds new user to the waitingsockets
                 waitingSockets.add(socket.accept());
                 
                 
@@ -55,8 +55,9 @@ public class NetworkManager implements Runnable{
         }
         
     }
-    
+    //stops the socket and safely closes the streams
     synchronized public void stop(){
+        
         
         try {
             socket.close();

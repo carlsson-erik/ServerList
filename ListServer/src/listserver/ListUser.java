@@ -94,7 +94,7 @@ public class ListUser implements Runnable {
             }
             //adds all the new information from the UserPacage to the listUser
             if (currentPackage != null) {
-                System.out.println(currentPackage.getKey());
+                
                 if (currentPackage.getPort() != 0) {
                     port = currentPackage.getPort();
                 }
