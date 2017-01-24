@@ -26,7 +26,7 @@ public class ListUser implements Runnable {
     private int port;
     private int players;
     private String key;
-    private boolean requestingList,bound;
+    private boolean requestingList, bound;
 
     private UserPackage currentPackage;
 
@@ -55,25 +55,19 @@ public class ListUser implements Runnable {
 
     @Override
     public void run() {
-            
-        
-        
-        
-            //Sets up the streams
+
+        //Sets up the streams
         setupStreams();
         //get the ip
         ip = socket.getInetAddress().getHostAddress();
-        //ip = "155.4.235.146";
         //Do this while connected
         whileConnected();
         //safely close the streams
         bound = false;
         closeStreams();
-        
-        
+
         t.stop();
-        
-    
+
     }
 
     public void setupStreams() {
@@ -81,17 +75,17 @@ public class ListUser implements Runnable {
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
             input = new ObjectInputStream(socket.getInputStream());
-        bound = true;
+            bound = true;
         } catch (IOException ex) {
             closeStreams();
         }
-        
+
     }
 
     public void whileConnected() {
         do {
             try {
-                
+
                 //Waits for a userPackage
                 currentPackage = (UserPackage) input.readObject();
             } catch (IOException ex) {
@@ -101,21 +95,22 @@ public class ListUser implements Runnable {
                 closeStreams();
                 break;
             }
+            //adds all the new information from the UserPacage to the listUser
             if (currentPackage != null) {
-                
+
                 if (currentPackage.getPort() != 0) {
-                    
+
                     port = currentPackage.getPort();
                 }
                 if (currentPackage.getPlayers() != 0) {
                     players = currentPackage.getPlayers();
-                    
+
                 }
                 if (currentPackage.getName() != null) {
                     name = currentPackage.getName();
                 }
                 if (currentPackage.getKey() != null) {
-                    
+
                     key = currentPackage.getKey();
                 }
                 if (currentPackage.isRequestingList()) {
@@ -133,7 +128,6 @@ public class ListUser implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(ListUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
 
     }
 
@@ -186,8 +180,6 @@ public class ListUser implements Runnable {
     synchronized public String getKey() {
         return key;
     }
-
-    
 
     /**
      * @return the requestList

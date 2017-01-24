@@ -336,15 +336,20 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
                 break;
             case "/remove":
                 //removes a player or a server with the right ip
-                if (arg.length > 3) {
+                if (arg.length > 2) {
                     if (arg[1].contains("server")) {
-                        removeServer(arg[2], Integer.parseInt(arg[3]));
+                        if(removeServer(arg[2], Integer.parseInt(arg[3]))){
+                            showMessage("Server: " + arg[2] + " Port: " + arg[3] + " removed");
+                        }
+                        
                     }
 
                 }
-                if (arg.length > 2) {
+                if (arg.length > 1) {
                     if (arg[1].contains("player")) {
-                        removePlayer(arg[2]);
+                        if (removePlayer(arg[2])) {
+                            showMessage("Player: " + arg[2] + " removed");
+                        }
                     }
                 }
                 break;
@@ -368,27 +373,30 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
     }
 
     //removes a player with that ip from the players arraylist
-    public void removePlayer(String ip) {
-        System.out.println("removing player: " + ip);
-        for (int i = 0; i < players.size() - 1; i++) {
+    public boolean removePlayer(String ip) {
+
+        for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getIp().contains(ip)) {
                 players.remove(i);
-                System.out.println("User Removed");
-                break;
+
+                return true;
+
             }
         }
+        return false;
     }
 
     //removes a server with that ip and port from the servers arraylist
-    public void removeServer(String ip, int port) {
+    public boolean removeServer(String ip, int port) {
 
-        for (int i = 0; i < gameServers.size() - 1; i++) {
+        for (int i = 0; i < gameServers.size(); i++) {
             if (gameServers.get(i).getIp().contains(ip) && gameServers.get(i).getPort() == port) {
                 gameServers.remove(i);
 
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     //Handles all the key inputs
