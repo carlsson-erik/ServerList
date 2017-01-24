@@ -26,7 +26,7 @@ public class UserPackage implements Serializable{
         this.players = players;
     }
     
-    public UserPackage(String Key){
+    public UserPackage(String key){
         this.key = key;
     }
     public UserPackage(boolean requestList){

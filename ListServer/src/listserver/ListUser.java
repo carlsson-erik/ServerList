@@ -88,29 +88,23 @@ public class ListUser implements Runnable {
 
                 //Waits for a userPackage
                 currentPackage = (UserPackage) input.readObject();
-            } catch (IOException ex) {
-                closeStreams();
-                break;
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 closeStreams();
                 break;
             }
             //adds all the new information from the UserPacage to the listUser
             if (currentPackage != null) {
-
+                System.out.println(currentPackage.getKey());
                 if (currentPackage.getPort() != 0) {
-
                     port = currentPackage.getPort();
                 }
                 if (currentPackage.getPlayers() != 0) {
                     players = currentPackage.getPlayers();
-
                 }
                 if (currentPackage.getName() != null) {
                     name = currentPackage.getName();
                 }
                 if (currentPackage.getKey() != null) {
-
                     key = currentPackage.getKey();
                 }
                 if (currentPackage.isRequestingList()) {

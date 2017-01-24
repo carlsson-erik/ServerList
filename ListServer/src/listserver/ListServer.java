@@ -205,7 +205,7 @@ public class ListServer extends JFrame implements ActionListener, Runnable {
                     //Adds users to removeUsers arraylist if they haven't sent the key in the time frame of WAIT_FOR_KEY_TIME
                     for (ListUser lU : users) {
                         //Checks if key match or if there is no key else the user is placed in the temporary removeUsers arrayList
-                        if (lU.getKey() == keyText.getText() || keyText.getText().isEmpty()) {
+                        if (lU.getKey() != null && lU.getKey().equals(keyText.getText()) || keyText.getText().isEmpty()) {
 
                             //if the user gives a port and name it becoms a server else it becoms a player
                             if (lU.getPort() != 0 && lU.getName() != null) {
